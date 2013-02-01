@@ -28,6 +28,9 @@ func (handler CategoryHandler) GetRoutes() []*RouteHandler {
 		{"/categories/{id:[0-9]+|create}.json", func(w http.ResponseWriter, r *http.Request, user *usecases.User, title *Title) *WebError {
 			return handler.PutPostJSON(w, r, user, title)
 		}, []string{"PUT", "POST"}},
+		{"/categories/{id:[0-9]+}.json", func(w http.ResponseWriter, r *http.Request, user *usecases.User, title *Title) *WebError {
+			return handler.DeleteJSON(w, r, user, title)
+		}, []string{"DELETE"}},
 	}
 }
 
@@ -78,6 +81,22 @@ func (handler CategoryHandler) ListJSON(w http.ResponseWriter, r *http.Request, 
 	return nil
 }
 
+func (handler CategoryHandler) DeleteJSON(w http.ResponseWriter, r *http.Request, user *usecases.User, title *Title) *WebError {
+	vars := mux.Vars(r)
+	id, _ := strconv.Atoi(vars["id"])
+	category, err := handler.CategoryInteractor.FetchById(id, user.Id)
+	if err != nil {
+		log.Println(err)
+		return nil
+	}
+	err = handler.CategoryInteractor.Delete(category)
+	if err != nil {
+		log.Println(err)
+		return nil
+	}
+	return nil
+}
+
 func (handler CategoryHandler) PutPostJSON(w http.ResponseWriter, r *http.Request, user *usecases.User, title *Title) *WebError {
 	vars := mux.Vars(r)
 	var err error
@@ -89,6 +108,8 @@ func (handler CategoryHandler) PutPostJSON(w http.ResponseWriter, r *http.Reques
 			log.Println(err)
 			return nil
 		}
+	} else {
+		category.OwnerId = user.Id
 	}
 	rt, err := ParseJSONBody(r)
 	if err != nil {
@@ -97,6 +118,9 @@ func (handler CategoryHandler) PutPostJSON(w http.ResponseWriter, r *http.Reques
 	}
 	if name, ok := rt["Name"].(string); ok {
 		category.Name = name
+	}
+	if catType, ok := rt["Type"].(string); ok {
+		category.Type = catType
 	}
 	category.Order = InterfaceToInt(rt["Order"], category.Order)
 	err = handler.CategoryInteractor.Save(category)

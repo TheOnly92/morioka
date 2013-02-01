@@ -28,3 +28,7 @@ func (inter *CategoryInteractor) FetchById(id, userId int) (*domain.Category, er
 func (inter *CategoryInteractor) Save(category *domain.Category) error {
 	return inter.CategoryRepo.Store(category)
 }
+
+func (inter *CategoryInteractor) Delete(category *domain.Category) error {
+	return inter.CategoryRepo.Delete(category)
+}

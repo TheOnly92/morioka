@@ -24,4 +24,5 @@ type CategoryRepository interface {
 	FindAllDetails(userId int) ([]*CategoryDetail, error)
 	Store(category *Category) error
 	StoreDetail(detail *CategoryDetail) error
+	Delete(category *Category) error
 }

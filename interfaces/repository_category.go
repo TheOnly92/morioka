@@ -110,3 +110,11 @@ func (repo *DbCategoryRepo) StoreDetail(detail *domain.CategoryDetail) error {
 	}
 	return nil
 }
+
+func (repo *DbCategoryRepo) Delete(category *domain.Category) error {
+	_, err := repo.db.Exec("DELETE FROM categories WHERE id = $1 AND owner_id = $2", category.Id, category.OwnerId)
+	if err != nil {
+		return err
+	}
+	return nil
+}
