@@ -218,7 +218,7 @@ func NewPgsqlHandler(pgsqlUrl string) *PgsqlHandler {
 	dbuser := pgsql.User.Username()
 	password, _ := pgsql.User.Password()
 	host := strings.Split(pgsql.Host, ":")
-	dbname := pgsql.Path
+	dbname := strings.TrimLeft(pgsql.Path, "/")
 	db, err := sql.Open("postgres", "user="+dbuser+" dbname="+dbname+" password="+password+" sslmode=disable port="+host[1]+" host="+host[0])
 	if err != nil {
 		log.Fatal("Connect DB ", err)
