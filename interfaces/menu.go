@@ -29,7 +29,7 @@ func GetUserLeftMenu() []*MenuItem {
 		}},
 		&MenuItem{"FinanceSettings", "#", "家計簿の設定", "list", false, true, []*MenuItem{
 			&MenuItem{"AccountManageHandler", "/accounts/#", "口座一覧", "", false, false, []*MenuItem{}},
-			&MenuItem{"CategoryManageHandler", "/category/manage", "項目一覧", "", false, false, []*MenuItem{}},
+			&MenuItem{"CategoryManageHandler", "/categories/#", "項目一覧", "", false, false, []*MenuItem{}},
 			&MenuItem{"ShopManageHandler", "/shop/manage", "お店一覧", "", false, false, []*MenuItem{}},
 			&MenuItem{"ProductManageHandler", "/product/manage", "商品一覧", "", false, false, []*MenuItem{}},
 		}},
