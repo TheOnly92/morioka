@@ -6,6 +6,7 @@ import (
 	"github.com/TheOnly92/morioka/usecases"
 	_ "github.com/bmizerany/pq"
 	"log"
+	"net/url"
 	"reflect"
 	"regexp"
 	"strconv"
@@ -212,8 +213,13 @@ func (r PgsqlResult) RowsAffected() (int64, error) {
 	return rt, err
 }
 
-func NewPgsqlHandler(dbuser string, password string, dbname string, dbport string, dbhost string) *PgsqlHandler {
-	db, err := sql.Open("postgres", "user="+dbuser+" dbname="+dbname+" password="+password+" sslmode=disable port="+dbport+" host="+dbhost)
+func NewPgsqlHandler(pgsqlUrl string) *PgsqlHandler {
+	pgsql, _ := url.Parse(pgsqlUrl)
+	dbuser := pgsql.User.Username()
+	password, _ := pgsql.User.Password()
+	host := strings.Split(pgsql.Host, ":")
+	dbname := pgsql.Path
+	db, err := sql.Open("postgres", "user="+dbuser+" dbname="+dbname+" password="+password+" sslmode=disable port="+host[1]+" host="+host[0])
 	if err != nil {
 		log.Fatal("Connect DB ", err)
 	}
